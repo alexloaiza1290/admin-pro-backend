@@ -13,6 +13,7 @@ app.use(express.json());
 //usuario
 //alex
 app.use('/api/users', require('./routes/users.route'));
+app.use('/api/auth', require('./routes/auth.route'));
 
 dbConection();
 
