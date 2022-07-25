@@ -3,16 +3,14 @@ const bcryptj = require('bcryptjs');
 const UserDB = require('../models/userDB');
 const { generarJWT } = require('../helpers/jwt');
 const getUsers = async (req, resp) => {
-    const user = await UserDB.find({}, 'name lastName email role google');
+    const user = await UserDB.find({}, 'name email role google');
     resp.json({
         ok: true,
         user,
-        uid:req.uid
     })
 }
 const createUsers = async (req, resp = response) => {
     const { email, password } = req.body;
-
     try {
 
         const existEmail = await UserDB.findOne({ email });
@@ -53,9 +51,9 @@ const updateUsers = async (req, res = response) => {
 
     try {
 
-        const usuarioDB = await UserDB.findById( uid );
+        const usuarioDB = await UserDB.findById(uid);
 
-        if ( !usuarioDB ) {
+        if (!usuarioDB) {
             return res.status(404).json({
                 ok: false,
                 msg: 'No existe un usuario por ese id'
@@ -65,26 +63,26 @@ const updateUsers = async (req, res = response) => {
         // Actualizaciones
         const { password, google, email, ...campos } = req.body;
 
-        if ( usuarioDB.email !== email ) {
+        if (usuarioDB.email !== email) {
 
             const existeEmail = await UserDB.findOne({ email });
-            if ( existeEmail ) {
+            if (existeEmail) {
                 return res.status(400).json({
                     ok: false,
                     msg: 'Ya existe un usuario con ese email'
                 });
             }
         }
-        
+
         campos.email = email;
-        const usuarioActualizado = await UserDB.findByIdAndUpdate( uid, campos, { new: true } );
+        const usuarioActualizado = await UserDB.findByIdAndUpdate(uid, campos, { new: true });
 
         res.json({
             ok: true,
             usuario: usuarioActualizado
         });
 
-        
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -108,7 +106,7 @@ const deleteUsers = async (req, resp = response) => {
                 msg: 'No existe un usuario con ese id'
             })
         }
-        await user.remove();       
+        await user.remove();
         resp.json({
             ok: true,
             ms: 'Usuario eliminado...!'
